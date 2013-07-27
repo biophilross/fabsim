@@ -161,8 +161,7 @@ class simulation:
     if sumOfProbabilities > 0:
       normalizedProbabilities = [{ 
           "producer"    : producer,
-          "probability" : self.calcProbDensity(producer, goodDemanded) / sumOfProbabilities,
-          "id"          : producer.getID()
+          "probability" : self.calcProbDensity(producer, goodDemanded) / sumOfProbabilities
         } for producer in producers]
       bestProducer = max(normalizedProbabilities, key = lambda value: value['probability'])['producer']
       bestGood = bestProducer.getClosestTo(goodDemanded)
@@ -193,28 +192,46 @@ class simulation:
   def run(self, scenario): 
     # scenario = 'factories', 'fabricators' or 'all'
 
-    # initialize variables based on scenario input
-    if scenario == 'factories':
-      rate    = self.factoryRate
-      goods   = self.numFactoryGoods
-      localID = 'factory'
-    elif scenario == 'fabricators':
-      rate    = self.fabricatorRate
-      goods   = self.numFabricatorGoods
-      localID = 'fabricator'
-    elif scenario == 'all':
-      rate    = 0
-      goods   = 0
-      localID = 'idk'
+    # just for debugging purposes
+    def display_stats():
+      print "\n"
+      print "=================================================="
+      print max(profits, key = lambda key: sum(profits[key])) + " Wins!\n"
+
+      # display stats
+      for producer in producers:
+        print producer.getID() + " Profits: " + str(producer.getProfits())
+        print producer.getID() + " Average Price: " + str(producer.getAverageGoodPrice())
+        print producer.getID() + " Average Good Distance: " + str(abs(producer.getAverageGoodID() - (sum(goodsDemanded) / len(goodsDemanded))))
+        print ""
+      print "================================================="
 
     # initialize producers and arrays for plotting
     producers = []
     profits = dict()
-    for i in range(self.numProducers):
-      inventory = [Good(rd.random(), rd.random(), rate) for good in range(goods)] # set inventory
-      key = localID + str(i) # set key and id
-      producers.append(Producer(inventory, rate, key))
-      profits[key] = np.zeros(self.simLength + 1)
+    if scenario == 'factories':
+      for i in range(self.numProducers):
+        inventory = [Good(rd.random(), rd.random(), self.factoryRate) for good in range(self.numFactoryGoods)] # set inventory
+        key = 'factory' + str(i) # set key and id
+        producers.append(Producer(inventory, self.factoryRate, key))
+        profits[key] = np.zeros(self.simLength + 1)
+    elif scenario == 'fabricators':
+      for i in range(self.numProducers):
+        inventory = [Good(rd.random(), rd.random(), self.fabricatorRate) for good in range(self.numFabricatorGoods)] # set inventory
+        key = 'fabricator' + str(i) # set key and id
+        producers.append(Producer(inventory, self.fabricatorRate, key))
+        profits[key] = np.zeros(self.simLength + 1)
+    elif scenario == 'all':
+      for i in range(int(self.numProducers / 2)):
+        inventory = [Good(rd.random(), rd.random(), self.factoryRate) for good in range(self.numFactoryGoods)] # set inventory
+        key = 'factory' + str(i) # set key and id
+        producers.append(Producer(inventory, self.factoryRate, key))
+        profits[key] = np.zeros(self.simLength + 1)
+      for i in range(int(self.numProducers / 2)):
+        inventory = [Good(rd.random(), rd.random(), self.fabricatorRate) for good in range(self.numFabricatorGoods)] # set inventory
+        key = 'fabricator' + str(i) # set key and id
+        producers.append(Producer(inventory, self.fabricatorRate, key))
+        profits[key] = np.zeros(self.simLength + 1)
 
     #run simulations
     goodsDemanded = [] # keeping track of goods demanded
@@ -228,19 +245,6 @@ class simulation:
         producer.updateInventory()
         profits[producer.getID()][timestep + 1] = producer.getProfits()
 
-    # display winner
-    print "\n"
-    print "=================================================="
-    print max(profits, key = lambda key: sum(profits[key])) + " Wins!\n"
-
-    # display stats
-    for producer in producers:
-      print producer.getID() + " Profits: " + str(producer.getProfits())
-      print producer.getID() + " Average Price: " + str(producer.getAverageGoodPrice())
-      print producer.getID() + " Average Good Distance: " + str(abs(producer.getAverageGoodID() - (sum(goodsDemanded) / len(goodsDemanded))))
-      print ""
-    print "================================================="
-
     #Does the producer with the most profits in the end also have the highest average price?
     averagePrices = dict()
     for producer in producers:
@@ -250,6 +254,8 @@ class simulation:
       result = 1 # they both have the most profits and highest average good price
     else:
       result = 0 # they don't
+
+    display_stats()
 
     return result
 
@@ -266,4 +272,4 @@ FACTORYRATE = 10
 FABRICATORRATE = 1
 sim = simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, NUMPRODUCERS, PERCENTFACTORY, FACTORYRATE, FABRICATORRATE)
 
-sim.run('factories')
+sim.run('all')
