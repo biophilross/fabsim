@@ -1,0 +1,151 @@
+%%% Socio-Economic Effects of Personal Fabricators
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage{tikz}
+\usetikzlibrary{mindmap,trees}
+\usepackage{verbatim}
+\usepackage{researchdiary_png}
+
+\newcommand{\workingDate}{\textsc{2013 $|$ July $|$ 16}}
+\newcommand{\userName}{Phil Ross \& Wyman Zhao}
+\newcommand{\institution}{Binghamton University}
+
+\begin{document}
+\univlogo
+
+\title{Research Diary}
+
+{\Huge July 16}\\[5mm]
+
+\textit{These are the research notes on the study of the Socio-Economic Effects of the Widespread Diffusion and \centerline{Adoption of Personal Fabricators.}}
+
+\section*{Project Description}
+
+\subsection*{Research Goals}
+
+The motivation behind this research is to analyze not only the factors that may lead to the the widespread diffusion and adoption of personal fabricator technology but also the socio-economic effects it will have on society, assuming the forecasted diffusion happens.
+
+The rise of personal fabricators is widely being compared to the rise of the personal computer in the 1970's and 1980's in what's being called the "Maker Revolution." 
+
+Essentially the research can be divided into two parts:
+\begin{enumerate}
+\item
+What parameters are of highest importance in relation to the diffusion of personal fabricators
+\item
+What socio-economic effects will widespread adoption have on society
+\end{enumerate}
+
+\subsection*{Agent-Based Model}
+
+In order to best answer these questions we decided upon an agent-based model to be simulated computationally rather than attempt an analytical solution. As pointed out by Zaccaria et. al., agent-based models offer a more realistic alternative as opposed to other models that limit themselves to the Classical Model of Economics.
+
+The setup for our model is much the same as the neoclassical approach: the economical system will be composed of agents and goods. Agents in this case can be either producers or consumers or both. They can represent individual people or firms as a whole.
+
+Agents will behave according to the rational model i.e. they will look to maximize their own utility and that each agent is fully informed and processes this information similarly. Price variation will also be included and is regulated by the laws of aggregated supply and demand.
+
+Finally, in addition to making decisions based off of price vectors of goods as determined by supply and demand, some irrationality is introduced into the model along the lines of an agent's desire to consume a particular good. The exact details of such an implementation is thus far unclear but the addition of some sort of inherent utility giving each agent some heterogeneity is the desired result.
+
+\subsection*{Where Our Model Differs}
+
+The area where our model begins to differentiate itself from other economical agent-based models is in the addition of a biochemically-inspired product network. In addition to the economical aspect of our model, agents will also have different methods of producing goods as inspired by the rise of personal fabricators.
+
+First I should clarify an important distinction. In order to make goods in our model, agents can either produce a small variety of goods albeit with high output or produce a large variety of goods albeit with small output. What we are differentiating between here are factory-style and personal fabricator-style production models. And these different methods of producing goods should not be thought of as discrete but more along the lines of a continuous spectrum.
+
+It's here that we introduce what we call our product network that consists of a directed graph of nodes and vertices representing products and their relationships to one another. This network is can be thought of as a large set of recipes or reactions that provide agents with the information needed in order to create certain products. Included in this network are products ranging from the least complex - raw materials - to the most complex - self-replicating personal fabricators. 
+
+This network is what agents will use when determining what goods are needed to make certain products and what methods they will use to create those products. In other words, an agent could follow the factory-style production model and make a few number of goods at a high capacity or make a greater variety of goods at a lower capacity. That decision will be based off of what method yields them the highest possible utility.
+
+Thus we have agents that can buy, sell, and make goods based on the reactions that can be found within the product network which resembles an anabolic biochemical pathway where you have more simple compounds come together in order to  create more complex ones.  The method of making those goods, whether it be a factory or a personal fabricator can be thought of as the catalyst to the reaction as they are more along the lines of tools being used to accomplish a more complex reaction than an agent would be able to accomplish using their hands.
+
+\section*{Starting with the Basics}
+
+In order to begin designing a model we first needed to validate the underlying economics. Thus we came up with a set of simple test cases to simulate in order to prove that our model, at its foundation, was behaving in a manner in which we understood and that was grounded in the fundamental laws of economics.
+
+\subsection*{Initial Model Description}
+
+\subsubsection*{Agents}
+
+In order to keep it simple the agents within our model can be broken up in the following manner:
+
+\begin{itemize}
+\item
+Agents
+\begin{itemize}
+\item
+Producers
+\begin{itemize}
+\item
+Personal Fabricators
+\item
+Factories
+\end{itemize}
+\item
+Consumers
+\end{itemize}
+\end{itemize}
+
+Here, producers will consist of either an agent with the capability  of factory-style production or an agent with the capability of personal fabricator-style production. At each time-step of the simulation, a producer will produce the goods which it has the capability to produce at the rate which it can produce them and add those newly made goods to its inventory. As soon as those goods are made they are also available for consumers to buy. And here consumers can only perform one action: buying goods.
+
+\subsubsection*{Goods}
+
+In order to keep the model as simple as possible a product network is not yet necessary. Instead in order to represent the spectrum of goods we will simply use a continuous range of values from 0 - 1. The amount of initial goods within the system will be a changeable parameter as will the number of producers and consumers. 
+
+Pricing of goods will initially be static thus there is no need to implement any sort of aggregate supply and demand functionality yet.
+
+\subsubsection*{Decision Making}
+
+Agents will make decisions on what to buy based on a function that takes into account the distance between what good they're demanding and what goods are actually available on the market and the prices of those available goods. That function is
+
+\begin{equation}
+d_m = \frac{1}{(t-m)^2} \times \frac{1}{c_m} 
+\end{equation}
+
+where $d_m$ is the desire to buy good $m$, $t$ is the good actually being demanded, and $c_m$ is the price of good $m$. 
+
+Each turn agents will use this function to output a set of scores that represents their desires to purchase a certain good. Those scores will then be used as probabilities to stochastically buy goods.
+
+\subsection*{Test Cases}
+
+Using this initial model design we're planning on running simulation under the following circumstances:
+
+\begin{enumerate}
+\item
+Two Producers as Factories
+\item
+Two Producers as Personal Fabricators
+\item
+One Producer as a Factory and one Producer as a Personal Fabricator
+\end{enumerate}
+
+There will also be $n$ number of consumers but that will be a changeable parameter as well.
+
+In addition to the variation in producer agents however, there are three additional scenarios that are worth considering. Those being:
+
+\begin{enumerate}
+\item
+Both Producers Selling the Same Goods but with Different Prices
+\item
+Both Producers Selling Different Goods but for the Same Prices
+\item
+Both Producers Selling Different Goods for Different Prices
+\end{enumerate}
+
+Thus, using this initial model design we will be looking to analyze the results of 9 total scenarios where the most realistic test case of the above being where we have two different producers selling different goods for different prices.
+
+\subsection*{Simulation Pseudo-Code}
+
+\begin{verbatim}
+For each timestep:
+
+  For each 1000 consumers:
+
+    Consume
+
+  For each producer:
+
+    Update inventory (increment all quantities by corresponding rate)
+
+\end{verbatim}
+
+
+\end{document}

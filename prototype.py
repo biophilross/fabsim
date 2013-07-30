@@ -1,17 +1,28 @@
+"""
 ###############################################################################
-# PROTOTPYE
-#
-# Agent-Based Simulation - Diffusion & Adoption of Personal Fabricators
-#
-# Original Author: Wyman Zhao
-# Contributor(s): Philipp Ross
+PROTOTYPE
+
+Agent-Based Simulation - Diffusion & Adoption of Personal Fabricators
+Original Author: Wyman Zhao
+Contributor(s): Philipp Ross
+
 ###############################################################################
+CONTENTS
+
+IMPORT MODULES
+GOOD CLASS
+PRODUCER CLASS
+SIMULATION CLASS
+RUN SIM
+###############################################################################
+"""
 
 ###############################################################################
 # IMPORT MODULES
 ###############################################################################
 
 from __future__ import division # will always return floating point
+import time
 import random as rd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -87,7 +98,7 @@ class Producer:
   #good (Good object)
   def sell(self, good):
     if good in self.inventory and good.getQuantity() > 0:
-      good.decrementQuantityBy(1)
+      # good.decrementQuantityBy(1)
       self.profits = self.profits + good.getPrice()
 
   def updateInventory(self):
@@ -197,8 +208,6 @@ class simulation:
       print "\n"
       print "=================================================="
       print max(profits, key = lambda key: sum(profits[key])) + " Wins!\n"
-
-      # display stats
       for producer in producers:
         print producer.getID() + " Profits: " + str(producer.getProfits())
         print producer.getID() + " Average Price: " + str(producer.getAverageGoodPrice())
@@ -206,7 +215,7 @@ class simulation:
         print ""
       print "================================================="
 
-    # initialize producers and arrays for plotting
+    # initialize producers and arrays for plotting based on  scenario
     producers = []
     profits = dict()
     if scenario == 'factories':
@@ -242,7 +251,7 @@ class simulation:
         goodsDemanded.append(goodDemanded)
         self.consumerBuysFrom(producers, goodDemanded)
       for producer in producers:
-        producer.updateInventory()
+        # producer.updateInventory()
         profits[producer.getID()][timestep + 1] = producer.getProfits()
 
     #Does the producer with the most profits in the end also have the highest average price?
@@ -263,8 +272,8 @@ class simulation:
 # RUN SIM
 ###############################################################################
 
-SIMLENGTH = 10
-NUMGOODS = 100
+SIMLENGTH = 100
+NUMGOODS = 1000
 NUMCONSUMERS = 1000
 NUMPRODUCERS = 2
 PERCENTFACTORY = 0.1
@@ -272,4 +281,40 @@ FACTORYRATE = 10
 FABRICATORRATE = 1
 sim = simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, NUMPRODUCERS, PERCENTFACTORY, FACTORYRATE, FABRICATORRATE)
 
-sim.run('all')
+sim.run('factories')
+
+
+"""
+start = time.clock() # timing how long the simulation takes to run
+factory_results = []
+fabricator_results = []
+all_results = []
+for i in range(50):
+  factory_results.append(sim.run('factories'))
+  fabricator_results.append(sim.run('fabricators'))
+  all_results.append(sim.run('all'))
+end = time.clock() # timing how long the simulation takes to run
+
+print "Input parameters are:"
+print ""
+print "SIMLENGTH = {simLength}\nNUMGOODS = {numGoods}\nNUMCONSUMERS = {numConsumers}\nNUMPRODUCERS = {numProducers}\nPERCENTFACTORY = {percentFactory}\nFACTORYRATE = {factoryRate}\nFABRICATORRATE = {fabricatorRate}".format(simLength = SIMLENGTH, numGoods = NUMGOODS, numConsumers = NUMCONSUMERS, numProducers = NUMPRODUCERS, percentFactory = PERCENTFACTORY, factoryRate = FACTORYRATE, fabricatorRate = FABRICATORRATE)
+print ""
+print "================================================="
+print "Factory Results:"
+print str(factory_results)
+print str(sum(factory_results) / len(factory_results) * 100) + "%"
+print ""
+print "================================================="
+print "Fabricator Results:"
+print str(fabricator_results)
+print str(sum(fabricator_results) / len(fabricator_results) * 100) + "%"
+print ""
+print "================================================="
+print "All Results:"
+print str(all_results)
+print str(sum(all_results) / len(all_results) * 100) + "%"
+print "================================================="
+print ""
+print "Simulation took " + str(end - start) + " seconds to run!"
+print "================================================="
+"""
