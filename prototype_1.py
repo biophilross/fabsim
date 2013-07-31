@@ -207,23 +207,25 @@ class simulation:
 
 SIMLENGTH = 100
 NUMGOODS = 100
-NUMCONSUMERS = 100
+NUMCONSUMERS = 1000
 PERCENTFACTORY = 0.1
 sim = simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, PERCENTFACTORY)
 
-start = time.clock() # timing how long the simulation takes to run
-results = []
-for i in range(100):
-  results.append(sim.run())
-end = time.clock() # timing how long the simulation takes to run
+def display_results(numSimulations):
+  start = time.clock() # timing how long the simulation takes to run
+  results = []
+  for i in range(numSimulations):
+    results.append(sim.run())
+  end = time.clock() # timing how long the simulation takes to run
+  print ""
+  print "================================================="
+  print "Results:"
+  #print str(results)
+  print ""
+  print str(sum(results) / len(results) * 100) + "%" + " of the time the producer with the most profits also had the highest average price"
+  print ""
+  print "Simulation took " + str(end - start) + " seconds to run!"
+  print ""
+  print "================================================="
 
-print ""
-print "================================================="
-print "Results:"
-#print str(results)
-print ""
-print str(sum(results) / len(results) * 100) + "%" + " of the time the producer with the most profits also had the highest average price"
-print ""
-print "Simulation took " + str(end - start) + " seconds to run!"
-print ""
-print "================================================="
+display_results(50)
