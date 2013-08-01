@@ -22,7 +22,9 @@ RUN SIM
 ###############################################################################
 
 from __future__ import division # will always return floating point
-import time # used to time the simulation
+import time                     # for timing the simulation
+import json                     # for encoding and decoding data
+import os                       # interface with operating system
 import random as rd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -117,7 +119,7 @@ class simulation:
   #producer (Producer object)
   def calcProbDensity(self, producer, goodDemanded):
     bestGood = producer.getClosestTo(producer.getInventory(), goodDemanded)
-    probabilityDensity = (1 / bestGood.getPrice())
+    probabilityDensity = (1 / (bestGood.getID() - goodDemanded)**2) * (1 / bestGood.getPrice())
     return probabilityDensity
 
   #producers (Array of Producers)
@@ -150,6 +152,22 @@ class simulation:
     plt.show()
 
 ###############################################################################
+# I/O METHODs
+###############################################################################
+
+  def write_json(self, fileName, data):
+    with open(fileName, 'w') as f:
+      json.dump(data, f)
+
+  def read_json(self, fileName):
+    if os.path.exists(fileName):
+      with open(fileName, 'r') as f:
+        data = json.load(f)
+        return data
+    else:
+      print('File does not exist!')
+
+###############################################################################
 # RUN METHOD
 ###############################################################################
 
@@ -169,17 +187,17 @@ class simulation:
 
     # initialize producers and arrays for plotting
     producers = [
-      Producer('producer0', [Good(rd.random(), rd.random()) for good in range(self.numFactoryGoods)]),
-      Producer('producer1', [Good(rd.random(), rd.random()) for good in range(self.numFactoryGoods)])
+      Producer('producer0', [Good(0.5, rd.random()) for good in range(self.numFactoryGoods)]),
+      Producer('producer1', [Good(0.5, rd.random()) for good in range(self.numFactoryGoods)])
     ]
     profits = dict()
     profits['producer0'] = np.zeros(self.simLength + 1)
     profits['producer1'] = np.zeros(self.simLength + 1)
 
-    #run simulations
+    # run simulations
     goodsDemanded = [] # keeping track of goods demanded
     for timestep in range(self.simLength):
-      # print str(timestep), # print timesteps to console to observe progress
+      print str(timestep), # print timesteps to console to observe progress
       for numConsumers in range(self.numConsumers):
         goodDemanded = rd.random() 
         goodsDemanded.append(goodDemanded)
@@ -187,7 +205,7 @@ class simulation:
       for producer in producers:
         profits[producer.getID()][timestep + 1] = producer.getProfits()
 
-    #Does the producer with the most profits in the end also have the highest average price?
+    # Does the producer with the most profits in the end also have the highest average price?
     averagePrices = dict()
     for producer in producers:
       averagePrices[producer.getID()] = producer.getAverageGoodPrice()
@@ -197,7 +215,21 @@ class simulation:
     else:
       result = 0 # they don't
 
-    # display_stats()
+    #Write results to file in JSON format
+    data = dict()  
+    for producer in producers:
+      data = {
+        "producer"         : producer.getID(),
+        "profits"          : producer.getProfits(),
+        "average_price"    : producer.getAverageGoodPrice(),
+        "average_distance" : abs(producer.getAverageGoodID() - (sum(goodsDemanded) / len(goodsDemanded)))
+      }
+    self.write_json('p1.json', data)
+
+    if os.path.exists('p1.json'):
+      with open('p1.json', 'r') as f:
+        var = json.load(f)
+        print var
 
     return result
 
@@ -207,9 +239,11 @@ class simulation:
 
 SIMLENGTH = 100
 NUMGOODS = 100
-NUMCONSUMERS = 1000
+NUMCONSUMERS = 100
 PERCENTFACTORY = 0.1
 sim = simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, PERCENTFACTORY)
+
+sim.run()
 
 def display_results(numSimulations):
   start = time.clock() # timing how long the simulation takes to run
@@ -217,8 +251,16 @@ def display_results(numSimulations):
   for i in range(numSimulations):
     results.append(sim.run())
   end = time.clock() # timing how long the simulation takes to run
-  print ""
   print "================================================="
+  print "Input parameters are:"
+  print ""
+  print "SIMLENGTH = {simLength}\nNUMGOODS = {numGoods}\nNUMCONSUMERS = {numConsumers}\nPERCENTFACTORY = {percentFactory}".format(
+    simLength = SIMLENGTH, 
+    numGoods = NUMGOODS, 
+    numConsumers = NUMCONSUMERS, 
+    percentFactory = PERCENTFACTORY
+  )
+  print ""
   print "Results:"
   #print str(results)
   print ""
@@ -227,5 +269,3 @@ def display_results(numSimulations):
   print "Simulation took " + str(end - start) + " seconds to run!"
   print ""
   print "================================================="
-
-display_results(50)
