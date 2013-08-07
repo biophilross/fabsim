@@ -99,15 +99,17 @@ class simulation:
   #simLength (int)
   #numGoods (int)
   #numConsumers (int)
+  #numProducers (int)
   #percentFactory (float) between 0 and 1
   #factoryRate (int)
   #fabricatoryRate (int)
-  def __init__(self, simLength, numGoods, numConsumers, percentFactory):
+  def __init__(self, simLength, numGoods, numConsumers, numProducers, percentFactory):
     print "Running..."
     print ""
     self.simLength = simLength
     self.numGoods = numGoods
     self.numConsumers = numConsumers
+    self.numProducers = numProducers
     self.numFactoryGoods = int(numGoods * percentFactory)
     self.numFabricatorGoods = numGoods - self.numFactoryGoods
 
@@ -187,14 +189,14 @@ class simulation:
       print "================================================="
 
     # initialize producers and arrays for plotting
-    goodIDs = [rd.random() for i in range(self.numFabricatorGoods)]
-    producers = [
-      Producer('producer0', [Good(goodIDs[i], rd.random()) for i in range(self.numFactoryGoods)]),
-      Producer('producer1', [Good(goodIDs[i], rd.random()) for i in range(self.numFactoryGoods)])
-    ]
     profits = dict()
-    profits['producer0'] = np.zeros(self.simLength + 1)
-    profits['producer1'] = np.zeros(self.simLength + 1)
+    producers = []
+    goodIDs = [rd.random() for i in range(self.numFactoryGoods)]
+    for i in range(self.numProducers):
+        inventory = [Good(goodIDs[i], rd.random()) for i in range(self.numFactoryGoods)]
+        key = 'producer' + str(i)
+        producers.append(Producer(key, inventory))
+        profits[key] = np.zeros(self.simLength + 1)
 
     # run simulations
     goodsDemanded = [] # keeping track of goods demanded
@@ -237,10 +239,13 @@ class simulation:
 ###############################################################################
 
 SIMLENGTH = 100
-NUMGOODS = 1000
+NUMGOODS = 100
 NUMCONSUMERS = 1000
+NUMPRODUCERS = 2
 PERCENTFACTORY = 0.1
-sim = simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, PERCENTFACTORY)
+sim = simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, NUMPRODUCERS, PERCENTFACTORY)
+
+sim.run()
 
 def display_results(numSimulations):
   start = time.clock() # timing how long the simulation takes to run
@@ -266,5 +271,3 @@ def display_results(numSimulations):
   print "Simulation took " + str(end - start) + " seconds to run!"
   print ""
   print "================================================="
-
-display_results(50)
