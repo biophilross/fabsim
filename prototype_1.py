@@ -187,7 +187,7 @@ class simulation:
       print "================================================="
 
     # initialize producers and arrays for plotting
-    goodIDs = [rd.random() for i in range(self.numFabricatorGoods)]
+    goodIDs = [rd.random() for i in range(self.numFactoryGoods)]
     producers = [
       Producer('producer0', [Good(goodIDs[i], rd.random()) for i in range(self.numFactoryGoods)]),
       Producer('producer1', [Good(goodIDs[i], rd.random()) for i in range(self.numFactoryGoods)])

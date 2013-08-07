@@ -203,7 +203,7 @@ class simulation:
     for timestep in range(self.simLength):
       print str(timestep), # print time steps to console to observe progress
       for numConsumers in range(self.numConsumers):
-        goodDemanded = 0.5
+        goodDemanded = 0.3
         goodsDemanded.append(goodDemanded)
         self.consumerBuysFrom(producers, goodDemanded)
       for producer in producers:
