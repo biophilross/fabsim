@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 ###############################################################################
 PROTOTYPE
@@ -140,17 +141,60 @@ class simulation:
 ###############################################################################
 
   #producers (List of Dictionaries of Producers)
-  def plot_histogram(self, producers):
+  def plot(self, producers):
 
-    producerIDs = [producer['producerID'] for producer in producers]
+    # format data
+    producerIDs = [int(producer['producerID']) for producer in producers]
     profits = [producer['profits'] for producer in producers]
     average_prices = [producer['average_price'] for producer in producers]
     average_distances = [producer['average_distance'] for producer in producers]
+    pog_agd = [producer['pog_agd'] for producer in producers]
 
-    hist, bins = np.histogram(profits, bins = 2)
-    width = 0.7*(bins[1]-bins[0])
-    center = (bins[:-1]+bins[1:])/2
-    plt.bar(center, hist, align = 'center', width = width)
+    # determine figure size - figsize(1,1) = 1" x 1" or 80 pixels x 80 pixels
+    plt.figure(1, figsize=(12, 8))
+
+    # plot profits
+    plt.subplot(221)
+    plt.grid(True)
+    plt.title('Producer Profits')
+    plt.ylabel('Profits')
+    plt.xlabel('ProducerIDs')
+    plt.axis([0, len(producerIDs) - 1 , 0, max(profits)])
+    plt.fill_between(producerIDs, profits, alpha='0.6', color='blue')
+    plt.plot(producerIDs, profits, 'k')
+
+    # plot average_prices
+    plt.subplot(222)
+    plt.grid(True)
+    plt.title('Producer Average Good Price')
+    plt.ylabel('Average Price')
+    plt.xlabel('ProducerIDs')
+    plt.axis([0, len(producerIDs) - 1, 0, 1])
+    plt.fill_between(producerIDs, average_prices, alpha='0.6', color='blue')
+    plt.plot(producerIDs, average_prices, 'k')
+
+    # plot average_prices
+    plt.subplot(223)
+    plt.grid(True)
+    plt.title('Producer Average Distance from Average Good Demanded')
+    plt.ylabel('Average Distance')
+    plt.xlabel('ProducerIDs')
+    plt.axis([0, len(producerIDs) - 1, 0, 1])
+    plt.fill_between(producerIDs, average_distances, alpha='0.6', color='blue')
+    plt.plot(producerIDs, average_distances, 'k')
+
+    # plot price of good closest to average good demanded
+    plt.subplot(224)
+    plt.grid(True)
+    plt.title('Producer PoG Closest to AGD')
+    plt.ylabel('Price')
+    plt.xlabel('ProducerIDs')
+    plt.axis([0, len(producerIDs) - 1, 0, 1])
+    plt.fill_between(producerIDs, pog_agd, alpha='0.6', color='blue')
+    plt.plot(producerIDs, pog_agd, 'k')
+
+    # display plot
+    plt.tight_layout()
     plt.show()
 
 ###############################################################################
@@ -183,7 +227,7 @@ class simulation:
       for producer in producers:
         print producer.getID() + " Profits: " + str(producer.getProfits())
         print producer.getID() + " Average Price: " + str(producer.getAverageGoodPrice())
-        print producer.getID() + " Price Closest to Average Good Demanded: " + str(producer.getClosestTo(producer.getInventory(), averageGoodDemanded).getPrice())
+        print producer.getID() + " PoG Closest to AGD: " + str(producer.getClosestTo(producer.getInventory(), averageGoodDemanded).getPrice())
         print producer.getID() + " Average Good Distance: " + str(abs(producer.getAverageGoodID() - (averageGoodDemanded)))
         print ""
       print "================================================="
@@ -193,17 +237,17 @@ class simulation:
     producers = []
     goodIDs = [rd.random() for i in range(self.numFactoryGoods)]
     for i in range(self.numProducers):
-        inventory = [Good(goodIDs[i], rd.random()) for i in range(self.numFactoryGoods)]
-        key = 'producer' + str(i)
-        producers.append(Producer(key, inventory))
-        profits[key] = np.zeros(self.simLength + 1)
+      key = 'producer_' + str(i)
+      inventory = [Good(goodIDs[i], rd.random()) for i in range(self.numFactoryGoods)]
+      producers.append(Producer(key, inventory))
+      profits[key] = np.zeros(self.simLength + 1)
 
     # run simulations
     goodsDemanded = [] # keeping track of goods demanded
     for timestep in range(self.simLength):
       print str(timestep), # print time steps to console to observe progress
       for numConsumers in range(self.numConsumers):
-        goodDemanded = 0.3
+        goodDemanded = rd.random()
         goodsDemanded.append(goodDemanded)
         self.consumerBuysFrom(producers, goodDemanded)
       for producer in producers:
@@ -214,13 +258,19 @@ class simulation:
 
     #Write results to file in JSON format
     data = [{
-      "producerID"       : producer.getID(),
+      "producerID"       : producer.getID().split('_')[-1], # retrieve only the numerical character
       "profits"          : producer.getProfits(),
       "average_price"    : producer.getAverageGoodPrice(),
-      "average_distance" : abs(producer.getAverageGoodID() - (sum(goodsDemanded) / len(goodsDemanded)))
+      "average_distance" : abs(producer.getAverageGoodID() - averageGoodDemanded),
+      "pog_agd"          : producer.getClosestTo(producer.getInventory(), averageGoodDemanded).getPrice()
     } for producer in producers]
+    self.write_json('results/p2_results.json', data)
 
+    # log stats
     display_stats()
+
+    # plot results 
+    self.plot(data)
 
     # The producer selling the good closest to the average good demanded for the cheapest - does he have the most profits?
     averagePrices = dict()
@@ -239,9 +289,9 @@ class simulation:
 ###############################################################################
 
 SIMLENGTH = 100
-NUMGOODS = 100
+NUMGOODS = 500
 NUMCONSUMERS = 1000
-NUMPRODUCERS = 2
+NUMPRODUCERS = 10
 PERCENTFACTORY = 0.1
 sim = simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, NUMPRODUCERS, PERCENTFACTORY)
 
@@ -264,9 +314,8 @@ def display_results(numSimulations):
   print "================================================="
   print ""
   print "Results:"
-  #print str(results)
   print ""
-  print str(sum(results) / len(results) * 100) + "%" + " of the time the producer with the most profits also had the highest average price"
+  print str(sum(results) / len(results) * 100) + "%" + " of the time the producer with the most profits also had the lowest price for the good closest to the average demanded good"
   print ""
   print "Simulation took " + str(end - start) + " seconds to run!"
   print ""

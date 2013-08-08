@@ -134,39 +134,6 @@ class simulation:
     bestProducer.sell(bestGood)
 
 ###############################################################################
-# PLOTTING METHODs
-###############################################################################
-
-  #producers (List of Dictionaries of Producers)
-  def plot_histogram(self, producers):
-
-    producerIDs = [producer['producerID'] for producer in producers]
-    profits = [producer['profits'] for producer in producers]
-    average_prices = [producer['average_price'] for producer in producers]
-    average_distances = [producer['average_distance'] for producer in producers]
-
-    hist, bins = np.histogram(profits, bins = 2)
-    width = 0.7*(bins[1]-bins[0])
-    center = (bins[:-1]+bins[1:])/2
-    plt.bar(center, hist, align = 'center', width = width)
-    plt.show()
-
-###############################################################################
-# I/O METHODs
-###############################################################################
-
-  def write_json(self, fileName, data):
-    with open(fileName, 'w') as f:
-      json.dump(data, f)
-
-  def read_json(self, fileName):
-    if os.path.exists(fileName):
-      with open(fileName, 'r') as f:
-        return json.load(f)
-    else:
-      print('File does not exist!')
-
-###############################################################################
 # RUN METHOD
 ###############################################################################
 
