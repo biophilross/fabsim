@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """
 ###############################################################################
 PROTOTYPE
@@ -149,6 +150,7 @@ class simulation:
     average_prices = [producer['average_price'] for producer in producers]
     average_distances = [producer['average_distance'] for producer in producers]
     pog_agd = [producer['pog_agd'] for producer in producers]
+    ratios = [producer['ratio'] for producer in producers]
 
     # determine figure size - figsize(1,1) = 1" x 1" or 80 pixels x 80 pixels
     plt.figure(1, figsize=(12, 8))
@@ -156,7 +158,7 @@ class simulation:
     # plot profits
     plt.subplot(221)
     plt.grid(True)
-    plt.title('Producer Profits')
+    plt.title('Profits')
     plt.ylabel('Profits')
     plt.xlabel('ProducerIDs')
     plt.axis([0, len(producerIDs) - 1 , 0, max(profits)])
@@ -166,27 +168,27 @@ class simulation:
     # plot average_prices
     plt.subplot(222)
     plt.grid(True)
-    plt.title('Producer Average Good Price')
+    plt.title('Average Good Price')
     plt.ylabel('Average Price')
     plt.xlabel('ProducerIDs')
     plt.axis([0, len(producerIDs) - 1, 0, 1])
     plt.fill_between(producerIDs, average_prices, alpha='0.6', color='blue')
     plt.plot(producerIDs, average_prices, 'k')
 
-    # plot average_prices
+    # plot ratio of average_prices and PoG Closest to AGD
     plt.subplot(223)
     plt.grid(True)
-    plt.title('Producer Average Distance from Average Good Demanded')
-    plt.ylabel('Average Distance')
+    plt.title('Ratio')
+    plt.ylabel('Ratio')
     plt.xlabel('ProducerIDs')
     plt.axis([0, len(producerIDs) - 1, 0, 1])
-    plt.fill_between(producerIDs, average_distances, alpha='0.6', color='blue')
-    plt.plot(producerIDs, average_distances, 'k')
+    plt.fill_between(producerIDs, ratios, alpha='0.6', color='blue')
+    plt.plot(producerIDs, ratios, 'k')
 
     # plot price of good closest to average good demanded
     plt.subplot(224)
     plt.grid(True)
-    plt.title('Producer PoG Closest to AGD')
+    plt.title('PoG Closest to AGD')
     plt.ylabel('Price')
     plt.xlabel('ProducerIDs')
     plt.axis([0, len(producerIDs) - 1, 0, 1])
@@ -258,11 +260,12 @@ class simulation:
 
     #Write results to file in JSON format
     data = [{
-      "producerID"       : producer.getID().split('_')[-1], # retrieve only the numerical character
+      "producerID"       : producer.getID().split('_')[-1], # retrieve only the numerical characters
       "profits"          : producer.getProfits(),
       "average_price"    : producer.getAverageGoodPrice(),
       "average_distance" : abs(producer.getAverageGoodID() - averageGoodDemanded),
-      "pog_agd"          : producer.getClosestTo(producer.getInventory(), averageGoodDemanded).getPrice()
+      "pog_agd"          : producer.getClosestTo(producer.getInventory(), averageGoodDemanded).getPrice(),
+      "ratio"            : producer.getAverageGoodPrice() * producer.getClosestTo(producer.getInventory(), averageGoodDemanded).getPrice() # combination of average_price and pog_agd
     } for producer in producers]
     self.write_json('results/p2_results.json', data)
 
@@ -291,7 +294,7 @@ class simulation:
 SIMLENGTH = 100
 NUMGOODS = 500
 NUMCONSUMERS = 1000
-NUMPRODUCERS = 10
+NUMPRODUCERS = 20
 PERCENTFACTORY = 0.1
 sim = simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, NUMPRODUCERS, PERCENTFACTORY)
 
@@ -305,10 +308,11 @@ def display_results(numSimulations):
   end = time.clock() # timing how long the simulation takes to run
   print "Input parameters are:"
   print ""
-  print "SIMLENGTH = {simLength}\nNUMGOODS = {numGoods}\nNUMCONSUMERS = {numConsumers}\nPERCENTFACTORY = {percentFactory}".format(
+  print "SIMLENGTH = {simLength}\nNUMGOODS = {numGoods}\nNUMCONSUMERS = {numConsumers}\nNUMPRODUCERS = {numProducers}\nPERCENTFACTORY = {percentFactory}".format(
     simLength = SIMLENGTH, 
     numGoods = NUMGOODS, 
     numConsumers = NUMCONSUMERS, 
+    numProducers = NUMPRODUCERS,
     percentFactory = PERCENTFACTORY
   )
   print "================================================="

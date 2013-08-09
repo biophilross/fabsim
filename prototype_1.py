@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 ###############################################################################
 PROTOTYPE
@@ -23,11 +25,9 @@ RUN SIM
 
 from __future__ import division # will always return floating point
 import time                     # for timing the simulation
-import json                     # for encoding and decoding data
 import os                       # interface with operating system
 import random as rd             # random number generator
 import numpy as np              # numerical functionality
-import matplotlib.pyplot as plt # plotting
 
 ###############################################################################
 # DEFINE GOOD CLASS
@@ -203,7 +203,7 @@ class simulation:
 # RUN SIM
 ###############################################################################
 
-SIMLENGTH = 100
+SIMLENGTH = 1000
 NUMGOODS = 1000
 NUMCONSUMERS = 1000
 PERCENTFACTORY = 0.1
