@@ -51,7 +51,7 @@ Similar to GoodIDs this will indicate whether producers are selling goods for th
 
 This will simply describe any additional functionality that each prototype has.
 
-#### Prototype_1.py
+#### prototype_1.py
 
 ###### Modules Needed
 
@@ -134,7 +134,7 @@ Every producer is selling good for different prices.
 
 There is a display_results() at the end of the file that will run the simulation 50 times and tell you how often the producer selling the good closest to the good being demanded for the cheapest price wins the profit war.
 
-#### Prototype_2.py
+#### prototype_2.py
 
 ###### Modules Needed
 
@@ -222,3 +222,7 @@ Every producer is selling good for different prices.
 ###### Additional Functionality
 
 This file also has a display_results() method at the end of the file but it is not currently set to automatically run. Instead each simulation produces a plot. In addition data is actually being written to a file in JSON format each time a simulation is run. This can be found in the run() method.
+
+#### prototype_main.py
+
+Still being updated but will eventually contain the functionality of all previous prototype version combined...
