@@ -9,14 +9,6 @@ Original Author: Wyman Zhao
 Contributor(s): Philipp Ross
 
 ###############################################################################
-CONTENTS
-
-IMPORT MODULES
-GOOD CLASS
-PRODUCER CLASS
-SIMULATION CLASS
-RUN SIM
-###############################################################################
 """
 
 ###############################################################################
@@ -24,94 +16,14 @@ RUN SIM
 ###############################################################################
 
 from __future__ import division # will always return floating point
+import goods
+import producers 
 import time                     # for timing the simulation
 import json                     # for encoding and decoding data
 import os                       # interface with operating system
 import random as rd             # random number generator
 import numpy as np              # numerical functionality
 import matplotlib.pyplot as plt # plotting
-
-###############################################################################
-# DEFINE GOOD CLASS
-###############################################################################
-
-class Good:
-  #idInput (float)
-  #priceInput (float)
-  #quantityInput(int)
-  def __init__(self, idInput, priceInput, quantityInput):
-    self.goodID = idInput
-    self.price = priceInput
-    self.quantity = quantityInput
-
-  def getID(self):
-    return self.goodID
-
-  def getPrice(self):
-    return self.price
-
-  def getQuantity(self):
-    return self.quantity
-
-  #quantityRequested (int)
-  def decrementQuantityBy(self, quantityRequested):
-    self.quantity = self.quantity - quantityRequested
-
-  #quantityRequested (int)
-  def incrementQuantityBy(self, quantityRequested):
-    self.quantity = self.quantity + quantityRequested
-
-###############################################################################
-# DEFINE PRODUCER CLASS
-###############################################################################
-
-class Producer:
-  #inventory (Array of Goods)
-  #rate (int)
-  #id (string)
-  def __init__(self, inventory, rate, idInput):
-    self.inventory = inventory
-    self.rate = rate
-    self.producerID = idInput
-    self.profits = 0
-
-  def getID(self):
-    return self.producerID
-
-  def getInventory(self):
-    return self.inventory
-
-  def getProfits(self):
-    return self.profits
-
-  def getAverageGoodPrice(self):
-    prices = [good.getPrice() for good in self.getInventory()]
-    return sum(prices) / len(self.getInventory())
-
-  def getAverageGoodID(self):
-    ids = [good.getID() for good in self.getInventory()]
-    return sum(ids) / len(self.getInventory())
-
-  def getClosestTo(self, goodDemanded):
-    currentGoods = [good for good in self.getInventory() if good.getQuantity() != 0]
-    if currentGoods: #currentGoods is not empty
-      return min(currentGoods, key = lambda good: abs(goodDemanded - good.getID()))
-    else: #there is no best good because inventory is empty
-      return Good(0, 0, 0)
-
-  #good (Good object)
-  def sell(self, good):
-    if good in self.inventory and good.getQuantity() > 0:
-      # good.decrementQuantityBy(1)
-      self.profits = self.profits + good.getPrice()
-
-  def updateInventory(self):
-    for good in self.inventory:
-      good.incrementQuantityBy(self.rate)
-
-  def __str__(self):
-    for good in self.inventory:
-      print "GoodID: " + str(good.getID()) + "   Price: " + str(good.getPrice()) + "  Quantity: " + str(good.getQuantity()) + "\n"
 
 ###############################################################################
 # DEFINE SIMULATION CLASS
