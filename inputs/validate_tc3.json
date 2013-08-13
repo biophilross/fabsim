@@ -7,6 +7,5 @@
   "testCase"        : "noConstants",
   "scenario"        : "factories",
   "buyingDecision"  : "roulette",
-  "outputFile"      : "validate_tc3",
   "monitor"         : true
 }

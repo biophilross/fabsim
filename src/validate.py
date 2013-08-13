@@ -227,7 +227,7 @@ class Validate:
     endTrial = time.clock()
 
     # write data to file in JSON format
-    write_json('../results/' + outputFile + '.json', producerData)
+    write_json('../results/' + outputFile, producerData)
 
     # print the results of trial runs to console
     print "=================================================\n"
@@ -256,8 +256,9 @@ class Validate:
 # command-line running of python script
 if __name__ == "__main__":
   import sys
-  inputs = read_json(sys.argv[1])
-  
+  outputFile = sys.argv[1]
+  inputs = read_json('../inputs/' + sys.argv[1])
+
   # set simulation parameters
   SIMLENGTH      = inputs['SIMLENGTH']
   NUMGOODS       = inputs['NUMGOODS']
@@ -272,6 +273,6 @@ if __name__ == "__main__":
     testCase       = inputs['testCase'], 
     scenario       = inputs['scenario'],
     buyingDecision = inputs['buyingDecision'],
-    outputFile     = inputs['outputFile'], 
+    outputFile     = outputFile, 
     monitor        = inputs['monitor']
   )

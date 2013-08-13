@@ -7,6 +7,5 @@
   "testCase"        : "constantIDs",
   "scenario"        : "all",
   "buyingDecision"  : "nonRoulette",
-  "outputFile"      : "validate_tc1",
   "monitor"         : true
 }

@@ -213,7 +213,7 @@ class Simulation:
     endTrial = time.clock()
 
     # write data to file in JSON format
-    write_json('../results/' + outputFile + '.json', producerData)
+    write_json('../results/' + outputFile, producerData)
 
     # print the results of trial runs to console
     print "=================================================\n"
@@ -241,7 +241,8 @@ class Simulation:
 # command-line running of python script
 if __name__ == "__main__":
   import sys
-  inputs = read_json(sys.argv[1])
+  outputFile = sys.argv[1]
+  inputs = read_json('../inputs/' + sys.argv[1])
 
   # set simulation parameters
   SIMLENGTH      = inputs['SIMLENGTH']
@@ -255,7 +256,6 @@ if __name__ == "__main__":
   sim.run(
     numTrials  = inputs['numTrials'], 
     scenario   = inputs['scenario'],
-    outputFile = inputs['outputFile'], 
+    outputFile = outputFile, 
     monitor    = inputs['monitor']
   )
-

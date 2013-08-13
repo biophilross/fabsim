@@ -7,6 +7,5 @@
   "testCase"        : "constantPrices",
   "scenario"        : "factories",
   "buyingDecision"  : "roulette",
-  "outputFile"      : "validate_tc2",
   "monitor"         : true
 }

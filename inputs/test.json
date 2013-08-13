@@ -5,8 +5,6 @@
   "NUMPRODUCERS"   : 20,
   "PERCENTFACTORY" : 0.1,
   "numTrials"      : 1,
-  "testCase"       : "constantIDs",
   "scenario"       : "factories",
-  "outputFile"     : "test",
   "monitor"        : true
 }
