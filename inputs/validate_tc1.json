@@ -1,0 +1,12 @@
+{
+  "SIMLENGTH"       : 500,
+  "NUMGOODS"        : 500,
+  "NUMCONSUMERS"    : 1000,
+  "PERCENTFACTORY"  : 0.1,
+  "numTrials"       : 15,
+  "testCase"        : "constantIDs",
+  "scenario"        : "all",
+  "buyingDecision"  : "nonRoulette",
+  "outputFile"      : "validate_tc1",
+  "monitor"         : true
+}

@@ -1,0 +1,12 @@
+{
+  "SIMLENGTH"       : 500,
+  "NUMGOODS"        : 500,
+  "NUMCONSUMERS"    : 1000,
+  "PERCENTFACTORY"  : 0.1,
+  "numTrials"       : 15,
+  "testCase"        : "constantPrices",
+  "scenario"        : "factories",
+  "buyingDecision"  : "roulette",
+  "outputFile"      : "validate_tc2",
+  "monitor"         : true
+}

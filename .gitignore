@@ -1,0 +1,12 @@
+.DS_Store
+*.pyc
+*.bak
+*~
+*.swp
+*.pdf
+build/*
+doc/_build/*
+dist/*
+*.egg-info/*
+distribute*.egg
+distribute*.tar.gz
