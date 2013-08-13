@@ -1,6 +1,6 @@
-# fabsim
-======
+## fabsim README
 
-### Personal Fabricator Simulation
+
+### Personal Fabricator Diffusion Simulation
 
 In progress...
