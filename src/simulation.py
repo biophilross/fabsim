@@ -1,19 +1,16 @@
 #!/usr/bin/env python
 
-###############################################################################
-# PROTOTYPE
-
-# Agent-Based Simulation - Diffusion & Adoption of Personal Fabricators
+# Agent-Based Simulation - Diffusion & Adoption of Personal Fabricators - PROTOTYPE
 # Original Author: Wyman Zhao
 # Contributor(s): Philipp Ross
 
-# CONTENTS
-
-# IMPORT MODULES
-# SIMULATION CLASS
-# RUN SIM
-###############################################################################
-
+"""
+Contains the Simulation class used to actually run simulations. File should be run
+from the command line using a JSON formatted input file. Agent decision making 
+methods are contained within as well as the method that actually starts the
+simulation, Simulation.run(). In addition all reading, writing, and plotting of
+data is done within.
+"""
 
 ###############################################################################
 # IMPORT MODULES
@@ -35,6 +32,7 @@ from utility.file_io import read_json, write_json
 ###############################################################################
 
 class Simulation:
+  "Class used to run simulations."
   #simLength (int)
   #numGoods (int)
   #numConsumers (int)
@@ -54,12 +52,19 @@ class Simulation:
   #goodDemanded (float)
   #producer (Producer object)
   def calcProbDensity(self, producer, goodDemanded):
+    """
+    Calculates the probabilityDensity of buying a good from a producer using
+    the mathematical model for making buying decisions.
+    """
     bestGood = producer.getClosestTo(producer.getInventory(), goodDemanded)
     probabilityDensity = (1 / (bestGood.getID() - goodDemanded)**2) * (1 / bestGood.getPrice())
     return probabilityDensity
 
   #producers (Array of Producers)
   def rouletteConsumerBuysFrom(self, producers, goodDemanded):
+    """
+    Uses a simple roulette choice algorithm to add some irrationality to making buying decisions. 
+    """
     #Roulette Wheel Selection
     producerProbabilities = [self.calcProbDensity(producer, goodDemanded) for producer in producers]
     sumOfProbabilities = sum(producerProbabilities)
@@ -81,6 +86,7 @@ class Simulation:
 ###############################################################################
 
   def monitorSim(self, producers, profits, averageGoodDemanded, startSim, endSim, trial):
+    "Outputs results of each individual simulation - for debugging purposes."
     print "=================================================="
     print max(profits, key = lambda key: sum(profits[key])) + " Wins!\n"
     print "Average Good Demanded: " + str(averageGoodDemanded) + "\n"
@@ -99,7 +105,7 @@ class Simulation:
 
   # scenario(str)
   def initialize_producers(self, scenario):
-
+    "Initializes distinct producers based on the scenario given as an input."
     # initialize producers and arrays for plotting based on scenario
     producers = []
     profits = dict()
@@ -141,7 +147,13 @@ class Simulation:
   # outputFile (str)
   # monitor    (boolean)
   def run(self, numTrials = 1, scenario = 'factories', outputFile = 'test', monitor = False): 
-
+    """
+    This method actually runs the simulation itself and allows for you to run a 
+    specified number of trials of simulations. It will then write the results of 
+    the simulation to an output file in JSON format, plot the data using matplotlib, 
+    and print results of all trails to the console. In addition, if monitor = True, 
+    it will print the results of each individual simulation to the console as well.
+    """
     # let user know simulation has started running
     print "Running..."
     print ""
@@ -231,19 +243,19 @@ if __name__ == "__main__":
   import sys
   inputs = read_json(sys.argv[1])
 
-# set simulation parameters
-SIMLENGTH      = inputs['SIMLENGTH']
-NUMGOODS       = inputs['NUMGOODS']
-NUMCONSUMERS   = inputs['NUMCONSUMERS']
-NUMPRODUCERS   = inputs['NUMPRODUCERS']
-PERCENTFACTORY = inputs['PERCENTFACTORY']
-# Instantiate simulation
-sim = Simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, NUMPRODUCERS, PERCENTFACTORY)
-# run sim
-sim.run(
-  numTrials  = inputs['numTrials'], 
-  scenario   = inputs['scenario'],
-  outputFile = inputs['outputFile'], 
-  monitor    = inputs['monitor']
-)
+  # set simulation parameters
+  SIMLENGTH      = inputs['SIMLENGTH']
+  NUMGOODS       = inputs['NUMGOODS']
+  NUMCONSUMERS   = inputs['NUMCONSUMERS']
+  NUMPRODUCERS   = inputs['NUMPRODUCERS']
+  PERCENTFACTORY = inputs['PERCENTFACTORY']
+  # Instantiate simulation
+  sim = Simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, NUMPRODUCERS, PERCENTFACTORY)
+  # run sim
+  sim.run(
+    numTrials  = inputs['numTrials'], 
+    scenario   = inputs['scenario'],
+    outputFile = inputs['outputFile'], 
+    monitor    = inputs['monitor']
+  )
 

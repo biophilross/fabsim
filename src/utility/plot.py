@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+
+# Agent-Based Simulation - Diffusion & Adoption of Personal Fabricators - PROTOTYPE
+# Original Author: Wyman Zhao
+# Contributor(s): Philipp Ross
+
+"""
+This file contains the plotting function used in simulation.py to display the
+producerData dictionary which is also written to a results file in JSON
+format.
+"""
+
 ###############################################################################
 # IMPORT MODULES
 ###############################################################################
@@ -6,12 +18,12 @@ import numpy as np              # numerical functionality
 import matplotlib.pyplot as plt # plotting
 
 ###############################################################################
-# PLOTTING METHODs
+# PLOTTING METHOD
 ###############################################################################
 
 #producers (List of Dictionaries of Producers)
 def plot(producerData):
-
+  "Reformats producerData into arrays to be plotted using matplotlib module."
   # format data
   producerIDs = [int(producer['producerID'].split('_')[-1]) for producer in producerData]
   profits = [producer['profits'] for producer in producerData]

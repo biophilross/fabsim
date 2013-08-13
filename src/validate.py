@@ -1,19 +1,17 @@
 #!/usr/bin/env python
 
-###############################################################################
-# PROTOTYPE
-
-# Agent-Based Simulation - Diffusion & Adoption of Personal Fabricators
+# Agent-Based Simulation - Diffusion & Adoption of Personal Fabricators - PROTOTYPE
 # Original Author: Wyman Zhao
 # Contributor(s): Philipp Ross
 
-# CONTENTS
-
-# IMPORT MODULES
-# SIMULATION CLASS
-# RUN SIM
-###############################################################################
-
+"""
+This file contains a special Validate class used just to validate the mathematical
+model being tested out on TWO producers. It's very similar to the Simulation class. 
+The only thing differentiating producers here is the amount of goods in their inventory. 
+Other options included here that cannot be found explicitly in simulation.py include 
+explicitly choosing a test case and a buying decision function. 
+In addition there is no plotting functionality included.
+"""
 
 ###############################################################################
 # IMPORT MODULES
@@ -34,7 +32,8 @@ from utility.file_io import read_json, write_json
 # DEFINE SIMULATION CLASS
 ###############################################################################
 
-class Simulation:
+class Validate:
+  "Class used to validate simulation models."
   #simLength (int)
   #numGoods (int)
   #numConsumers (int)
@@ -181,8 +180,7 @@ class Simulation:
 
     # initialize data structures for trials
     producerData = dict()
-    wins = dict()
-    win[]
+    wins = np.zeros(self.numProducers)
 
     for trial in range(numTrials):
 
@@ -223,7 +221,7 @@ class Simulation:
         self.monitorSim(producers, profits, averageGoodDemanded, startSim, endSim, trial)
 
       # add a win to the producer with the most profits
-      wins[max(profits, key = lambda key: sum(profits[key]))] += 1
+      wins[int(max(profits, key = lambda key: sum(profits[key])).split('_')[-1])] += 1
 
     # timing how long the trials take to run
     endTrial = time.clock()
@@ -245,7 +243,7 @@ class Simulation:
     print "Scenario was: " + scenario + "\n"
     print "Results for " + str(numTrials) + " trial(s):\n"
     for producer in producers:
-      print producer.getID() + " won " + str(wins[producer.getID()]) + " times\n"
+      print producer.getID() + " won " + str(wins[int(producer.getID().split('_')[-1])]) + " time(s)\n"
     print "Trials took " + str(endTrial - startTrial) + " seconds to run!"
     print ""
     print "================================================="
@@ -259,21 +257,21 @@ class Simulation:
 if __name__ == "__main__":
   import sys
   inputs = read_json(sys.argv[1])
+  
+  # set simulation parameters
+  SIMLENGTH      = inputs['SIMLENGTH']
+  NUMGOODS       = inputs['NUMGOODS']
+  NUMCONSUMERS   = inputs['NUMCONSUMERS']
+  PERCENTFACTORY = inputs['PERCENTFACTORY']
 
-# set simulation parameters
-SIMLENGTH      = inputs['SIMLENGTH']
-NUMGOODS       = inputs['NUMGOODS']
-NUMCONSUMERS   = inputs['NUMCONSUMERS']
-PERCENTFACTORY = inputs['PERCENTFACTORY']
+  # Instantiate simulation
+  validate_sim = Validate(SIMLENGTH, NUMGOODS, NUMCONSUMERS, PERCENTFACTORY)
 
-# Instantiate simulation
-sim = Simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, PERCENTFACTORY)
-
-sim.run(
-  numTrials      = inputs['numTrials'], 
-  testCase       = inputs['testCase'], 
-  scenario       = inputs['scenario'],
-  buyingDecision = inputs['buyingDecision'],
-  outputFile     = inputs['outputFile'], 
-  monitor        = inputs['monitor']
-)
+  validate_sim.run(
+    numTrials      = inputs['numTrials'], 
+    testCase       = inputs['testCase'], 
+    scenario       = inputs['scenario'],
+    buyingDecision = inputs['buyingDecision'],
+    outputFile     = inputs['outputFile'], 
+    monitor        = inputs['monitor']
+  )
