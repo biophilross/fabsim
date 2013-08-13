@@ -18,6 +18,9 @@ This it the protoype of a simulation package being used to study the socio-econo
 
 5. Run `cd src` and then run `simulation.py test.json` to make sure the simulation runs properly
 
+Wanna see a quick description of each *.py file? Run `pydoc simulation` (assuming yo have pydoc installed and note the lack of .py at the end). Same thing applies to all source code files replacing 'simulation' with the desired file name.
+
+
 ### Quick Start
 
 If everything in the 'Install' section worked properly then you should have already been able to run your first simulation! If not…well I have some work to do.
