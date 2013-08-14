@@ -39,10 +39,9 @@ The inputs for _simulation.py_ are:
 * **NUMGOODS** - number of TOTAL goods in the simulation
 * **NUMCONSUMERS** - number of consumers 
 * **NUMPRODUCERS** - number of produers
-* **PERCENTFACTORY** - decimal value dictating the percentage of NUMGOODS that a factory can hold within its inventory. 1 - PERCENTFACTORY is the percentage of goods that a fabricator can hold within its inventory.
-
+* **PERCENTFACTORY** - decimal value dictating the percentage of NUMGOODS that a factory can hold within its inventory. 1 - PERCENTFACTORY is the percentage of goods that a fabricator can hold within its inventorys
 * **numTrials** - number of simulations to run
-* **scenario** - the distribution of producers you would like to see within your simulation; currently can only choose from all factories, all fabricators or half factories and half fabricators.
+* **scenario** - the distribution of producers you would like to see within your simulation; currently can only choose from all factories, all fabricators or half factories and half fabricators
 * **monitor** - True or False depending on whether you want to see the results of each invidual simulation in the console output
 
 The inputs for _validate.py_ are all the same except for the following addition:
