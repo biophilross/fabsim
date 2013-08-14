@@ -20,6 +20,15 @@ This it the protoype of a simulation package being used to study the socio-econo
 
 Wanna see a quick description of each *.py file? Run `pydoc simulation` (assuming yo have pydoc installed and note the lack of .py at the end). Same thing applies to all source code files replacing 'simulation' with the desired file name.
 
+### Module Dependencies
+
+The prototype currently uses the latest versions of the following libraries:
+
+* json
+* matplotlib
+* numpy
+
+If you python installed on your machine I would recommend installing via pip. In order to do so just open up your command line and run `easy_install pip` and then type in `pip install json`, `pip install matplotlib`, and `pip install numpy`. You can also do so using easy_install but I wouldn't recommend it...
 
 ### Quick Start
 
