@@ -6,10 +6,10 @@
 
 """
 This file contains a special Validate class used just to validate the mathematical
-model being tested out on TWO producers. It's very similar to the Simulation class. 
-The only thing differentiating producers here is the amount of goods in their inventory. 
-Other options included here that cannot be found explicitly in simulation.py include 
-explicitly choosing a test case and a buying decision function. 
+model being tested out on TWO producers. It's very similar to the Simulation class.
+The only thing differentiating producers here is the amount of goods in their inventory.
+Other options included here that cannot be found explicitly in simulation.py include
+explicitly choosing a test case and a buying decision function.
 In addition there is no plotting functionality included.
 """
 
@@ -23,7 +23,7 @@ import random as rd             # random number generator
 import numpy as np              # numerical functionality
 
 # import custom-made modules
-from good import Good           
+from good import Good
 from producer import Producer
 from utility.file_io import read_json, write_json
 
@@ -59,8 +59,8 @@ class Validate:
   # producers (Array of Producers)
   # goodDemanded (float)
   def nonRoulette(self, producers, goodDemanded):
-    producerProbabilities = [{ 
-    "producer"    : producer, 
+    producerProbabilities = [{
+    "producer"    : producer,
     "probability" : self.calcProbDensity(producer, goodDemanded)
     } for producer in producers]
     maxProbability = max(producerProbabilities, key = lambda key: key['probability'])
@@ -120,7 +120,7 @@ class Validate:
   # testCase (str)
   # scenario (Str)
   def initialize_producers(self, testCase, scenario):
-
+    """Initializes distinct producers based on the scenario given as an input."""
     # initialize keys and number of goods based on scenario
     if scenario == 'factories':
       keys            = ['factory_0', 'factory_1']
@@ -131,7 +131,7 @@ class Validate:
       inventoryGoods  = [self.numFabricatorGoods, self.numFabricatorGoods]
       goodConstants   = [[rd.random() for i in range(self.numFabricatorGoods)], [rd.random() for i in range(self.numFabricatorGoods)]]
     elif scenario == 'all':
-      keys            = ['factory', 'fabricator']
+      keys            = ['factory_0', 'fabricator_1']
       inventoryGoods  = [self.numFactoryGoods, self.numFabricatorGoods]
       goodConstants   = [[0.5 for i in range(self.numFactoryGoods)], [0.5 for i in range(self.numFabricatorGoods)]]
 
@@ -169,7 +169,7 @@ class Validate:
   # testCase   (str)
   # outputFile (str)
   # monitor    (boolean)
-  def run(self, numTrials = 1, testCase = 'constantIDs', scenario = 'factories', buyingDecision = 'nonRoulette', outputFile = 'validate', monitor = False): 
+  def run(self, numTrials = 1, testCase = 'constantIDs', scenario = 'factories', buyingDecision = 'nonRoulette', outputFile = 'validate', monitor = False):
 
     # let user know simulation has started running
     print "Running..."
@@ -180,7 +180,7 @@ class Validate:
 
     # initialize data structures for trials
     producerData = dict()
-    wins = np.zeros(self.numProducers)
+    wins = np.zeros(2)
 
     for trial in range(numTrials):
 
@@ -233,9 +233,9 @@ class Validate:
     print "=================================================\n"
     print "Input parameters were:\n"
     print "SIMLENGTH = {simLength}\nNUMGOODS = {numGoods}\nNUMCONSUMERS = {numConsumers}".format(
-      simLength      = SIMLENGTH, 
-      numGoods       = NUMGOODS, 
-      numConsumers   = NUMCONSUMERS, 
+      simLength      = SIMLENGTH,
+      numGoods       = NUMGOODS,
+      numConsumers   = NUMCONSUMERS,
       percentFactory = PERCENTFACTORY
     )
     print ""
@@ -269,10 +269,10 @@ if __name__ == "__main__":
   validate_sim = Validate(SIMLENGTH, NUMGOODS, NUMCONSUMERS, PERCENTFACTORY)
 
   validate_sim.run(
-    numTrials      = inputs['numTrials'], 
-    testCase       = inputs['testCase'], 
+    numTrials      = inputs['numTrials'],
+    testCase       = inputs['testCase'],
     scenario       = inputs['scenario'],
     buyingDecision = inputs['buyingDecision'],
-    outputFile     = outputFile, 
+    outputFile     = outputFile,
     monitor        = inputs['monitor']
   )

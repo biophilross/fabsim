@@ -6,7 +6,7 @@
 
 """
 Contains the Simulation class used to actually run simulations. File should be run
-from the command line using a JSON formatted input file. Agent decision making 
+from the command line using a JSON formatted input file. Agent decision making
 methods are contained within as well as the method that actually starts the
 simulation, Simulation.run(). In addition all reading, writing, and plotting of
 data is done within.
@@ -22,7 +22,7 @@ import random as rd             # random number generator
 import numpy as np              # numerical functionality
 
 # import custom-made modules
-from good import Good           
+from good import Good
 from producer import Producer
 from utility.plot import plot
 from utility.file_io import read_json, write_json
@@ -63,11 +63,11 @@ class Simulation:
   #producers (Array of Producers)
   def rouletteConsumerBuysFrom(self, producers, goodDemanded):
     """
-    Uses a simple roulette choice algorithm to add some irrationality to making buying decisions. 
+    Uses a simple roulette choice algorithm to add some irrationality to making buying decisions.
     """
     #Roulette Wheel Selection
-    producerProbabilities = [self.calcProbDensity(producer, goodDemanded) for producer in producers]
-    sumOfProbabilities = sum(producerProbabilities)
+    producerProbabilities = np.array([self.calcProbDensity(producer, goodDemanded) for producer in producers])
+    sumOfProbabilities = np.ndarray.sum(producerProbabilities)
     rouletteChoice = rd.random() * sumOfProbabilities
     currentChoice = 0
     bestProducer = producers[0]
@@ -105,7 +105,7 @@ class Simulation:
 
   # scenario(str)
   def initialize_producers(self, scenario):
-    "Initializes distinct producers based on the scenario given as an input."
+    """Initializes distinct producers based on the scenario given as an input."""
     # initialize producers and arrays for plotting based on scenario
     producers = []
     profits = dict()
@@ -146,12 +146,12 @@ class Simulation:
   # scenario   (str)
   # outputFile (str)
   # monitor    (boolean)
-  def run(self, numTrials = 1, scenario = 'factories', outputFile = 'test', monitor = False): 
+  def run(self, numTrials = 1, scenario = 'factories', outputFile = 'test', monitor = False):
     """
-    This method actually runs the simulation itself and allows for you to run a 
-    specified number of trials of simulations. It will then write the results of 
-    the simulation to an output file in JSON format, plot the data using matplotlib, 
-    and print results of all trails to the console. In addition, if monitor = True, 
+    This method actually runs the simulation itself and allows for you to run a
+    specified number of trials of simulations. It will then write the results of
+    the simulation to an output file in JSON format, plot the data using matplotlib,
+    and print results of all trails to the console. In addition, if monitor = True,
     it will print the results of each individual simulation to the console as well.
     """
     # let user know simulation has started running
@@ -178,7 +178,7 @@ class Simulation:
       for timestep in range(self.simLength):
         for numConsumer in range(self.numConsumers):
           goodDemanded = rd.random()
-          goodsDemanded[timestep + (self.simLength * trial)] = goodDemanded
+          goodsDemanded[numConsumer + (self.numConsumers * timestep)] = goodDemanded
           self.rouletteConsumerBuysFrom(producers, goodDemanded)
         for producer in producers:
           profits[producer.getID()][timestep] = producer.getProfits()
@@ -219,9 +219,9 @@ class Simulation:
     print "=================================================\n"
     print "Input parameters were:\n"
     print "SIMLENGTH = {simLength}\nNUMGOODS = {numGoods}\nNUMCONSUMERS = {numConsumers}".format(
-      simLength      = SIMLENGTH, 
-      numGoods       = NUMGOODS, 
-      numConsumers   = NUMCONSUMERS, 
+      simLength      = SIMLENGTH,
+      numGoods       = NUMGOODS,
+      numConsumers   = NUMCONSUMERS,
       percentFactory = PERCENTFACTORY
     )
     print ""
@@ -254,8 +254,8 @@ if __name__ == "__main__":
   sim = Simulation(SIMLENGTH, NUMGOODS, NUMCONSUMERS, NUMPRODUCERS, PERCENTFACTORY)
   # run sim
   sim.run(
-    numTrials  = inputs['numTrials'], 
+    numTrials  = inputs['numTrials'],
     scenario   = inputs['scenario'],
-    outputFile = outputFile, 
+    outputFile = outputFile,
     monitor    = inputs['monitor']
   )

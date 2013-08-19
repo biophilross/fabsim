@@ -31,3 +31,11 @@ class Good:
   def getPrice(self):
     """Returns the price of a good."""
     return self.price
+
+  def __repr__(self):
+    """Returns code representation of the instance."""
+    return "Good ID: %r Good Price: %r\n" % (self.getID(), self.getPrice())
+
+  def __str__(self):
+    """Returns string representation of the instance."""
+    return "Good ID: %r Good Price: %r\n" % (self.getID(), self.getPrice())

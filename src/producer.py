@@ -51,16 +51,19 @@ class Producer:
   #currentGoods (Array of Goods)
   #goodDemanded (float)
   def getClosestTo(self, currentGoods, goodDemanded):
-    "Returns the good with the goodID closest to the goodDemanded by a consumer."
+    """Returns the good with the goodID closest to the goodDemanded by a consumer."""
     return min(currentGoods, key = lambda good: abs(goodDemanded - good.getID()))
 
   #good (Good object)
   def sell(self, good):
-    "Updates the producer's profits by the price of the good being sold to a consumer."
-    if good in self.inventory:
+    """Updates the producer's profits by the price of the good being sold to a consumer."""
+    if good in self.getInventory():
       self.profits = self.profits + good.getPrice()
 
+  def __repr__(self):
+    """Returns code representation of the instance."""
+    return "Producer ID: %r\n %r" % (self.getID(), self.getInventory())
+
   def __str__(self):
-    "toString method to view each producer Object explicitly."
-    for good in self.inventory:
-      print "GoodID: " + str(good.getID()) + " Price: " + str(good.getPrice()) + "\n"
+    """Returns string representation of the instance."""
+    return "Producer ID: %r\n %r" % (self.getID(), self.getInventory())

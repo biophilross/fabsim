@@ -1,5 +1,5 @@
 {
-  "SIMLENGTH"      : 10,
+  "SIMLENGTH"      : 100,
   "NUMGOODS"       : 500,
   "NUMCONSUMERS"   : 1000,
   "NUMPRODUCERS"   : 20,

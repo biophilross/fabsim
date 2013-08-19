@@ -6,6 +6,6 @@
   "numTrials"       : 15,
   "testCase"        : "constantIDs",
   "scenario"        : "all",
-  "buyingDecision"  : "nonRoulette",
+  "buyingDecision"  : "roulette",
   "monitor"         : true
 }
